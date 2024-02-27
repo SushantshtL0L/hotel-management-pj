@@ -6,23 +6,27 @@ con = mysql.connector.connect(host="localhost", username="root", password="rojan
 cursor = con.cursor()
 
 def add_data():
-    global entry1, entry2, entry3, entry4, entry5, entry6, combo_gender, combo1
+    if var_Gender.get()=="" or var_Email.get()=="":
+       messagebox.showerror("Error","All fields are required",parent=root)
+    else:
+        try:
+            global entry1, entry2, entry3, entry4, entry5, entry6, combo_gender, combo1
     
-    customer_name = entry1.get()
-    email = entry2.get()
-    phone_number = entry3.get()
-    gender = combo_gender.get()
-    address = entry4.get()
-    nationality = entry5.get()
-    id_proof = combo1.get()
-    id_number = entry6.get()
+            customer_name = entry1.get()
+            email = entry2.get()
+            phone_number = entry3.get()
+            gender = combo_gender.get()
+            address = entry4.get()
+            nationality = entry5.get()
+            id_proof = combo1.get()
+            id_number = entry6.get()
     
-    query = "INSERT INTO customer (customer_name, email, number, gender, address, nationality, id_proof, idnum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    values = (customer_name, email, phone_number, gender, address, nationality, id_proof, id_number)
+            query = "INSERT INTO customer (customer_name, email, number, gender, address, nationality, id_proof, idnum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            values = (customer_name, email, phone_number, gender, address, nationality, id_proof, id_number)
     
-    cursor.execute(query, values)
-    con.commit()
-    print("Data inserted successfully!")
+             cursor.execute(query, values)
+             con.commit()
+             print("Data inserted successfully!")
 
 root = Tk()
 root.title("CUSTOMER PAGE")
