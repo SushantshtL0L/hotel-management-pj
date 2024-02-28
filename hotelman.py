@@ -14,23 +14,26 @@ def login_window():
 
 
 
-
- 
 def login_user():
     if userentry.get() == "" or passentry.get() == "":
         messagebox.showinfo("Error", "Please enter username and password.")
     else:
-        cursor.execute("SELECT * FROM new_table WHERE sex=%s AND email=%s", (userentry.get(), passentry.get()))
-        row = cursor.fetchone()
-        if row is None:
-            messagebox.showinfo("Error", "Invalid username and password")
-        else:
-            messagebox.showinfo("Success", "Congratulations!!!!")
-            login_window()
+        try:
+            cursor.execute("SELECT * FROM login WHERE username=%s AND password=%s", (userentry.get(), passentry.get()))
+            row = cursor.fetchone()
+            if row is None:
+                messagebox.showinfo("Error", "Invalid username and password")
+            else:
+                messagebox.showinfo("Success", "Congratulations!!!!")
+                login_window()
+        except mysql.connector.Error as err:
+            messagebox.showerror("Error", f"Error accessing database: {err}")
+
+
  
  
 def connect_database():
-    if entry3.get() == "" or entry4.get() == "" or entry5.get() == "" or entry6.get() == "" or entry7.get() == "":
+    if  entry5.get() == "" or entry6.get() == "" or entry7.get() == "":
         messagebox.showerror("Error", "Please enter all the data")
     elif entry6.get() != entry7.get():
         messagebox.showerror("error","error ")
@@ -42,22 +45,11 @@ def open_galler():
     gallery_window=Toplevel(root)
     
 def open_registration():
-    global entry3, entry4, entry5, entry6, entry7  # Declare Entry widgets as global
+    global  entry5, entry6, entry7 
     registration_window = Toplevel(root)
     registration_window.title("Register customer")
     registration_window.geometry("500x500")
  
-    label10 = Label(registration_window, text="Customer Name:")
-    label10.place(x=10, y=20)
- 
-    entry3 = Entry(registration_window, width=30)
-    entry3.place(y=20, x=120)
- 
-    label11 = Label(registration_window, text="Customer Age:")
-    label11.place(x=10, y=60)
- 
-    entry4 = Entry(registration_window, width=30)
-    entry4.place(y=60, x=120)
  
     label12 = Label(registration_window, text="username")
     label12.place(x=10, y=100)
@@ -79,24 +71,17 @@ def open_registration():
  
     store_button = Button(registration_window, text="Store Data", command=connect_database)
     store_button.place(x=10, y=200)
-    store_button = Button(registration_window, text="Store Data", command=store_data)
-    store_button.place(x=10, y=220)
-
-def store_data():
-    query = "INSERT INTO new_table (customer_name, customer_age, customer_number, sex, email) VALUES (%s, %s, %s, %s, %s)"
-    values=(entry3.get(), entry4.get(), entry5.get(), entry6.get(), entry7.get())
- 
-    cursor.execute(query, values)
-    con.commit()
     
-
-    def store_data():
-        query = "INSERT INTO new_table (customer_name, customer_age, customer_number, sex, email) VALUES (%s, %s, %s, %s, %s)"
-        values=(entry3.get(), entry4.get(), entry5.get(), entry6.get(), entry7.get())
-
+def store_data():
+    query = "INSERT INTO login (username, password, confirm) VALUES (%s, %s, %s)"
+    values = (entry5.get(), entry6.get(), entry7.get())
+ 
+    try:
         cursor.execute(query, values)
         con.commit()
         print("Data has been stored successfully!")
+    except mysql.connector.Error as err:
+        print("Error:", err)
 
 root=Tk()
 root.geometry('1750x750')
