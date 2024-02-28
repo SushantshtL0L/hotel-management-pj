@@ -1,16 +1,13 @@
 from tkinter import *
 from tkinter import ttk
-from PIL import Image, ImageTk
-import random
 import mysql.connector
-from tkinter import messagebox
-
-
+import random
 
 con = mysql.connector.connect(host="localhost", username="root", password="rojan7722", database="hotel")
-cursor = con.cursor()  
+cursor = con.cursor()
+
 def add_data():
-    global entry1, entry2, entry3, entry4, entry5, entry6, combo_gender, combo1
+    global entry1, entry2, entry3, entry4, entry5, entry6, combo_gender, combo_ID
     
     customer_name = entry1.get()
     email = entry2.get()
@@ -21,13 +18,12 @@ def add_data():
     id_proof = combo_ID.get()
     id_number = entry6.get()
     
-    query = "INSERT INTO customer (custome_name,email,number, gender, address, nationality, id_proof, idnum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO customer (custome_name, email, number, gender, address, nationality, id_proof, idnum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     values = (customer_name, email, phone_number, gender, address, nationality, id_proof, id_number)
     
     cursor.execute(query, values)
     con.commit()
     print("Data inserted successfully!")
-
 
 root = Tk()
 root.title("CUSTOMER PAGE")
@@ -51,7 +47,7 @@ var_Id_number = StringVar()
 # ***********TITLEEEEEEEEE********************************************************************************************
 
 label_title = Label(root, text="ENTER  CUSTOMER  DETAILS", font=(
-    "times new roman", 40, "bold"), bg="black", fg="gold", bd=1, relief=RIDGE)
+    "times new roman", 40, "bold"), bg="green", fg="gold", bd=1, relief=RIDGE)
 label_title.place(x=0, y=0, width=1250, height=50)
 
 labelframeleft = LabelFrame(root, bd=2, relief=RIDGE,
@@ -131,10 +127,8 @@ btn_frame = Frame(labelframeleft, bd=2, relief=RIDGE)
 btn_frame.place(x=150, y=320, width=190, height=40)
 
 butt = Button(btn_frame, text="Add", font=(
-    'times new roman', 14, 'bold'), bg="brown", fg="white",command=add_data)
+    'times new roman', 14, 'bold'), bg="brown", fg="white", command=add_data)
 butt.grid(row=180, column=0, padx=0)
-
-
 
 # *****************************NOTE*************************************
 
@@ -160,16 +154,13 @@ label_note_name.grid(row=10, column=0)
 
 # ___________________DOWN TABLE___________________
 
-
-
 details_table=LabelFrame(root,bd=2,relief=RIDGE,text="View Details",font=("new times roman",18,"bold"),padx=2)
 details_table.place(x=10,y=450,width=1220,height=430)
 
 lblsearchBy=Label(details_table,font=("arial",12,"bold"),text="Check your Details",bg="blue",fg="white")
 lblsearchBy.grid(row=0,column=0,sticky=W)
 
-
-   #______________________________________SCROLL__________________________________________
+#______________________________________SCROLL__________________________________________
 
 details_table=Frame(details_table,bd=2,relief=RIDGE)
 details_table.place(x=0,y=35,width=1200,height=350)
@@ -185,7 +176,7 @@ Scroll_y.pack(side=RIGHT,fill=Y)
 Scroll_x.config(command=Cust_Details_Table.xview)
 Scroll_y.config(command=Cust_Details_Table.yview)
 
-   #+++++++++++++++++++++HEADINGS++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++HEADINGS++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Cust_Details_Table.heading("name",text="Name")
 Cust_Details_Table.heading("email",text="Email")
@@ -209,9 +200,13 @@ Cust_Details_Table.column("Id number",width=100)
 
 Cust_Details_Table.pack(fill=BOTH,expand=1)
 
+# Fetch data from the database
+query = "SELECT custome_name, email, number, gender, address, nationality, id_proof, idnum FROM customer"
+cursor.execute(query)
+customer_data = cursor.fetchall()
+
+# Populate the Cust_Details_Table with the fetched data
+for data in customer_data:
+    Cust_Details_Table.insert('', 'end', values=data)
+
 root.mainloop()
-
-
-
-
-
